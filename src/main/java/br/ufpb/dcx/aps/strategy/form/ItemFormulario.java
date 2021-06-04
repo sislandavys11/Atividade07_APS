@@ -8,4 +8,5 @@ public interface ItemFormulario {
     public void setObrigatorio(boolean obrigatorio);
     public boolean isObrigatorio();
     public boolean isPreenchido();
+    public String getNome();
 }

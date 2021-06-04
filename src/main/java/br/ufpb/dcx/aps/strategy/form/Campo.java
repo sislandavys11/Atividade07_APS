@@ -1,6 +1,5 @@
 package br.ufpb.dcx.aps.strategy.form;
-
-import br.ufpb.dcx.aps.strategy.form.validadores.ValidadorTextoSimples;
+import br.ufpb.dcx.aps.strategy.form.validador.ValidadorTextoSimples;
 
 public class Campo implements ItemFormulario {
     private String nome;
@@ -8,6 +7,7 @@ public class Campo implements ItemFormulario {
     private String valor;
     private  boolean obrigatorio;
     private ValidadorCampo validador;
+    private boolean preenchido;
 
 
     public Campo(String id){
@@ -15,14 +15,11 @@ public class Campo implements ItemFormulario {
         this.nome = "";
         this.valor = "";
         this.obrigatorio = false;
+        this.preenchido = false;
         this.validador = new ValidadorTextoSimples();
-
     }
     public Campo(ValidadorCampo validador, boolean obrigatorio){
         this.validador = validador;
-        this.id = "";
-        this.nome = "";
-        this.valor = "";
         this.obrigatorio = obrigatorio;
     }
 
@@ -31,12 +28,22 @@ public class Campo implements ItemFormulario {
         this.nome = nome;
         this.valor = "";
         this.obrigatorio = false;
+        this.validador = new ValidadorTextoSimples();
+        this.preenchido = false;
     }
     public Campo(String id, boolean obrigatorio, String nome){
         this(id);
         this.obrigatorio = obrigatorio;
         this.nome = nome;
         this.valor = "";
+        this.validador = new ValidadorTextoSimples();
+        this.preenchido = false;
+
+    }
+
+    public Campo(String id, boolean obrigatorio) {
+        this.id = id;
+        this.obrigatorio = obrigatorio;
 
     }
 
@@ -66,6 +73,7 @@ public class Campo implements ItemFormulario {
         this.valor = valor;
     }
     public String getLabel(){
+
         return getNome();
     }
 
@@ -84,13 +92,14 @@ public class Campo implements ItemFormulario {
     }
 
     public Resultado validar(){
-        Resultado r = new Resultado();
-        if (this.obrigatorio  && !isPreenchido()){
-            r.setErro(true);
-            r.addMensagem("Este campo é obrigatório e não foi preenchido");
-            return r;
+        if (this.obrigatorio == true && !this.isPreenchido()){
+            return new Resultado(true, this.getId()+" é obrigatório e não foi preenchido");
         }
-        return this.validador.ValidarCampo(this.valor);
+        if (!this.isPreenchido()){
+            return new Resultado();
+        }
+        return this.validador.validarCampo(this.valor);
+
     }
 
     public void setObrigatorio(boolean obrigatorio) {
@@ -100,6 +109,7 @@ public class Campo implements ItemFormulario {
 
 
     public void setValidador(ValidadorCampo validador) {
+
         this.validador = validador;
     }
 }

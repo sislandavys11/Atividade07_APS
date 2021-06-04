@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Formulario  {
+public class Formulario {
     private String titulo;
-    private Map<String, Campo> intensForm = new LinkedHashMap<>();
+    private Map<String, ItemFormulario> itensForm = new LinkedHashMap<>();
 
     public Formulario(){
 
@@ -25,29 +25,31 @@ public class Formulario  {
         this.titulo = titulo;
     }
     public ItemFormulario getItemFormulario(String id) {
-
-        return intensForm.get(id);
-    }
-    public void intemFormulario(ItemFormulario item) {
-        if (intensForm.containsKey(item.getId())){
-            throw new RuntimeException("Já existe um item com este id:'"+item.getId()+"'");
+        if (itensForm.containsKey(id)) {
+            return itensForm.get(id);
         }
-        intensForm.put(item.getId(),item);
+        throw new IllegalArgumentException("Não existe campo com esse id");
+
+
+    }
+    public void addItemFormulario(ItemFormulario item) {
+        if (itensForm.containsKey(item.getId())){
+            throw new RuntimeException("'" + item.getId() + "' já existe");
+        }
+        itensForm.put(item.getId(),item);
     }
 
-    public Collection<Campo> getIntensForm() {
+    public Collection<ItemFormulario> getItemFormulario() {
 
-        return intensForm.values();
+        return itensForm.values();
     }
 
     public Resultado validar(){
         Resultado r = new Resultado();
-        for (Campo c: intensForm.values()){
-            if (c.validar().isErro()){
+        for (ItemFormulario i: itensForm.values()){
+            if (i.validar().isErro()){
                 r.setErro(true);
-                for (String msg: c.validar().getMensagens()){
-                    r.addMensagem("Campo " + c.getId() + ": " +msg);
-                }
+                r.addMensagem(i.getId()+ ": "+i.validar().getMsg());
             }
         }
         return r;

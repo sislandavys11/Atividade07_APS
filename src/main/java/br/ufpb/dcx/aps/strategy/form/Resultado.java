@@ -10,26 +10,32 @@ public class Resultado {
 
     public Resultado(){
         this.erro = false;
-        this.msg = "";
     }
     public Resultado(boolean erro){
         this.erro = erro;
-        this.msg = "";
     }
     public Resultado(boolean erro, String msg){
         this.erro = erro;
         this.msg = msg;
+        this.mensagens.add(msg);
     }
     public void addMensagem(String msg){
+        this.msg = msg;
         mensagens.add(msg);
     }
 
+    public String getMsg() {
+
+        return msg;
+    }
+
     public List<String> getMensagens(){
+
         return mensagens;
     }
 
 
-    public boolean isErro() {
+    public boolean isErro(){
         if (this.erro == true){
             return true;
         }
